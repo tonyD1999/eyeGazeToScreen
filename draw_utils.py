@@ -206,7 +206,7 @@ def random_sequence(img):
 
 
 
-def plot_pts(pts, name, MAE = None, save_path = None):
+def plot_pts(pts, name, MAE = None, savepath = None):
 	rng_pos = np.array([list(y) for y in [x[0] for x in pts]])
 	cur_pos = np.array([list(y) for y in [x[1] for x in pts]])
 	
@@ -220,7 +220,7 @@ def plot_pts(pts, name, MAE = None, save_path = None):
 	plt.gca().invert_yaxis()
 	plt.grid()
 	plt.legend()
-	if save_path:
+	if savepath:
 		plt.savefig(save_path+str_name+'.png')
 	else:
 		plt.savefig(str_name+'.png')
@@ -251,8 +251,12 @@ def display_canv(CANV_MODE, cur_pos=None):
 	# THIS FN returns RNG_POS and CUR_POS as TUPLES
 	# RETURN FORMAT: (TRUE_POS, CUR_POS) ..  RNG == TRUE
 	global focus, rng_pos
-	img = np.zeros((adj_H, W_px,3))
-
+	# img = np.zeros((adj_H, W_px,3))
+	img1 = cv2.imread("billboard.jpg")
+	# print((adj_H, W_px))
+	img = cv2.resize(img1, (W_px, adj_H), interpolation = cv2.INTER_AREA)
+	# img = cv2.resize(img1, (W_px, H_px), interpolation = cv2.INTER_AREA)
+	# cv2.imshow("test", img)
 	img = draw_grid(img, pxstep= GRID_STEP)
 	
 	if CANV_MODE == 'RNG':
@@ -287,7 +291,7 @@ def display_canv(CANV_MODE, cur_pos=None):
 	cv2.moveWindow("black_canv", 0,0)
 	return (rng_pos, cur_pos)
 
-def plot_eye_XYZ(pts, name, save_path):
+def plot_eye_XYZ(pts, name, savepath):
 
 	X_arr = np.array([x[0] for x in pts])
 	Y_arr = np.array([x[1] for x in pts])
@@ -304,8 +308,8 @@ def plot_eye_XYZ(pts, name, save_path):
 	ax2.grid()
 	ax3.grid()
 	# plt.show()
-	if save_path:
-		plt.savefig(save_path+name+'.pdf')
+	if savepath:
+		plt.savefig(savepath+name+'.pdf')
 	else:
 		plt.savefig(name+'.pdf')
 	plt.close()

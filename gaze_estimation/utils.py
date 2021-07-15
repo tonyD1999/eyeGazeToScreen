@@ -23,7 +23,7 @@ def setup_cudnn(config) -> None:
     torch.backends.cudnn.deterministic = config.cudnn.deterministic
 
 
-def load_config() -> yacs.config.CfgNode:
+def load_config(config_=None) -> yacs.config.CfgNode:
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', type=str)
     parser.add_argument('--demo', default = 0, type=int)
@@ -38,9 +38,12 @@ def load_config() -> yacs.config.CfgNode:
     args = parser.parse_args()
 
     config = get_default_config()
-    if args.config is not None:
+    if config_:
+        assert type(config_).__name__ == "str"
+        config.merge_from_file(config_)
+    elif args.config is not None:
         config.merge_from_file(args.config)
-    config.merge_from_list(args.options)
+    # config.merge_from_list(args.options)
     if not torch.cuda.is_available():
         config.device = 'cpu'
         config.train.train_dataloader.pin_memory = False

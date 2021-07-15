@@ -23,7 +23,6 @@ import pickle
 import time
 import imutils
 import sys
-import os
 
 import draw_utils
 from helper_fn import point_to_screen, dump_dict, calc_metrics, round_tup
@@ -131,6 +130,7 @@ class Demo:
 
             dlib_time = time.time()
             faces = self.gaze_estimator.detect_faces(undistorted)
+
             if RUNTIME:
                 print('DLIB faces: ', time.time() - dlib_time, ' seconds.')
 
@@ -425,6 +425,7 @@ class Demo:
             raise ValueError
 
         mid_point = (int(mid_x), int(mid_y))
+        print(f"mid_point: {mid_point}")
 
 def main():
     '''

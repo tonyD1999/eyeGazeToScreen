@@ -1,38 +1,55 @@
-# These are my modifications to the script
-
-- functionality to map the predicted gaze vector from webcam image to the computer screen
-- gridview pointer showing where the gaze is currently pointed at (adjustable pixel size)
-- added landmark averaging: **AVG_LANDMARKS** over number of frames
-- added gaze vector averaging: **GAZE_AVG_FLAG** over number of gaze vectors
-- video playback with different scenarios such as **UPDOWN**, **LEFTRIGHT**, **STABILITY**, **SEQ**
-- performance evaluation calcuation of **MAE**, **CEP** and **CE95**
-- drawing functions for the results
+# BILLBOARD ATTRACTION
+> We will use camera to count how many people looked your billboard to answer the
+question that “Is your billboard attractive ?”
+> Using Dlib and MPIIFaceGaze
 
 ## Calibration values
-Currently it is calibrated to my personal MBP13 so this needs to be adjusted accoring to your computer:
+* Setting height, width, camera
 > check **screen_conf.py** for more details
 
 ## Model weights
 * Landmarks: http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2
-* Eye model: https://github.com/hysts/pytorch_mpiigaze_demo/releases/download/v0.1.0/mpiigaze_resnet_preact.pth
 * Face model: https://github.com/hysts/pytorch_mpiigaze_demo/releases/download/v0.1.0/mpiifacegaze_resnet_simple.pth
-The Landmarks dlib file needs to be unzipped and moved to **pytorch_mpiigaze/data/dlib/** folder. Move the pth files into **data/models/** -> **mpiigaze/resnet_preact/** for the eye model and **mpiifacegaze/resnet_simple_14/** for the face model.
+* My Face model: https://drive.google.com/drive/folders/10AIdFyfSh2lj4iqnDpJCmL18F0TndFIR?usp=sharing
+    * model.pth: my model
+The Landmarks dlib file needs to be unzipped and moved to **pytorch_mpiigaze/data/dlib/** folder. Move the pth files into **mpiifacegaze/resnet_simple_14/** for the face model.
 
-## Run the script
-* eye model: configs/demo_mpiigaze_resnet.yaml
-* face model: configs/demo_mpiifacegaze_resnet_simple_14.yaml
-
-python point_2_screen.py --config configs/demo_mpiigaze_resnet.yaml --demo 1
-
-python point_2_screen.py --config configs/demo_mpiigaze_resnet.yaml --demo 1 --cust_vid 'path2video' --mode 'SEQ'
+## Demo
+* Gaze Estimation Demo
+    ```
+        python mydemo.py
+    ```
+* Streamlit + Flask
+    ```
+        set FLASK_APP=flask_server.py
+        flask run --host=<your ip> --port:<your defined port>
+        streamlit run streamlit_demo.py
+    ```
+    * Note:
+        * You need to change url in streamlit_demo.py
+        ```
+            url = "http://<server_ip>:<server_port>/"
+        ```
 
 ## Result:
-![GRID VIEW](grid.png)
-
-# A PyTorch implementation of MPIIGaze and MPIIFaceGaze
-
-[Here](https://github.com/hysts/pytorch_mpiigaze_demo) is a demo program.
-
+* Gaze Estimation Demo
+    * Camera frame:
+        * ![Camera_frame](https://drive.google.com/uc?export=view&id=1-QaEuJ5-4Y-Damg_7WQ6I7wSRNQW2n_A)
+    * Face tracker:
+        * ![tracker](https://drive.google.com/uc?export=view&id=1jR5m8uNtEl9STYuROyP0HoslqOFJY7Ab)
+    * Points on screen:
+        * ![Points](https://drive.google.com/uc?export=view&id=1K_nHApgI5bZ_F0hyXrDIhYPNRuzTqEMT)
+    * Grid View:
+        * ![Grid](https://drive.google.com/uc?export=view&id=1C0ZbSzQCLVhR0VGN6vm7tfJOXH8NoNYc)
+* Streamlit + Flask Demo:
+    * Run Demo:
+        * ![Streamlit Demo](https://drive.google.com/uc?export=view&id=1G4PQFCfrHowDkccUXZknn9zIi_mVbaoa)
+    * Log View:
+        * ![Log](https://drive.google.com/uc?export=view&id=1Jl9_ZyM4csfirWCrm0L1S16aQc8OuJK8)
+    * Point View:
+        * ![Point](https://drive.google.com/uc?export=view&id=1UAusr51DAQjRXFwZDZzj-4a0hIUAjlSG)
+    * Viewer:
+        * ![Viewer](https://drive.google.com/uc?export=view&id=1Dq1Whmj5jShyPG9H_Am8X44XOCBRDFjh)
 
 ## Requirements
 
@@ -44,64 +61,30 @@ pip install -r requirements.txt
 
 
 ## Download the dataset and preprocess it
-
-### MPIIGaze
-
-```bash
-bash scripts/download_mpiigaze_dataset.sh
-python tools/preprocess_mpiigaze.py --dataset datasets/MPIIGaze -o datasets/
-```
-
 ### MPIIFaceGaze
-
 ```bash
 bash scripts/download_mpiifacegaze_dataset.sh
 python tools/preprocess_mpiifacegaze.py --dataset datasets/MPIIFaceGaze -o datasets/
 ```
-
+* **Note**:
+    * Colab has limited storage so that dataset consumes lots of space. To overcome this problem, you should make a shortcut of this dataset (Google Drive)
+        * https://drive.google.com/drive/folders/19Z1Z1hELyeJmgrm5RcgIqv3ax2HQ7_T3?usp=sharing
+    * Then preprocess group of files
 
 ## Usage
 
-This repository uses [YACS](https://github.com/rbgirshick/yacs) for
+* This repository uses [YACS](https://github.com/rbgirshick/yacs) for
 configuration management.
-Default parameters are specified in
-[`gaze_estimation/config/defaults.py`](gaze_estimation/config/defaults.py)
-(which is not supposed to be modified directly).
-You can overwrite those default parameters using a YAML file like
-[`configs/mpiigaze/lenet_train.yaml`](configs/mpiigaze/lenet_train.yaml).
+* Default parameters are specified in `gaze_estimation/config/defaults.py` (which is not supposed to be modified directly).
+* You can overwrite those default parameters using a YAML file like `configs/mpiigaze/alexnet_train.yaml`.
 
 
 ### Training and Evaluation
-
-By running the following code, you can train a model using all the
-data except the person with ID 0, and run test on that person.
-
-```bash
-python train.py --config configs/mpiigaze/lenet_train.yaml
-python evaluate.py --config configs/mpiigaze/lenet_eval.yaml
-```
-
-Using [`scripts/run_all_mpiigaze_lenet.sh`](scripts/run_all_mpiigaze_lenet.sh) and
-[`scripts/run_all_mpiigaze_resnet_preact.sh`](scripts/run_all_mpiigaze_resnet_preact.sh),
-you can run all training and evaluation for LeNet and ResNet-8 with
-default parameters.
+* Train a model using all the data except the person with ID 0, and run test on that person.
+    * Looking **MPIIFaceGaze.ipynb** for infomation
 
 
 ## Results
-
-### MPIIGaze
-
-| Model           | Mean Test Angle Error [degree] | Training Time |
-|:----------------|:------------------------------:|--------------:|
-| LeNet           |              6.52              |  3.5 s/epoch  |
-| ResNet-preact-8 |              5.73              |   7 s/epoch   |
-
-The training time is the value when using GTX 1080Ti.
-
-![](figures/mpiigaze/lenet.png)
-
-![](figures/mpiigaze/resnet_preact_8.png)
-
 ### MPIIFaceGaze
 
 | Model     | Mean Test Angle Error [degree] | Training Time |
@@ -111,37 +94,18 @@ The training time is the value when using GTX 1080Ti.
 
 The training time is the value when using GTX 1080Ti.
 
-![](figures/mpiifacegaze/alexnet.png)
+![AlexNet](https://drive.google.com/uc?export=view&id=1STwuxFjREAFDFpKC-bB0rl_RjsAHJ5TA)
 
-![](figures/mpiifacegaze/resnet_simple.png)
+![ResNet-14](https://drive.google.com/uc?export=view&id=1jEFjvm3mU-4H5QNb5ziWMzU-wbL2VXtj)
 
+### My MPIIFaceGaze
 
+| Model     |     Test Angle Error [degree]  | Training Time |
+|:----------|:------------------------------:|--------------:|
+| AlexNet   |              2.63              |  780 s/epoch  |
+| ResNet-14 |              2.17              |  780 s/epoch  |
 
-
-### Demo
-
-This demo program runs gaze estimation on the video from a webcam.
-
-1. Download the dlib pretrained model for landmark detection.
-
-    ```bash
-    bash scripts/download_dlib_model.sh
-    ```
-
-2. Calibrate the camera.
-
-    Save the calibration result in the same format as the sample
-    file [`data/calib/sample_params.yaml`](data/calib/sample_params.yaml).
-
-4. Run demo.
-
-    Specify the model path and the path of the camera calibration results
-    in the configuration file as in
-    [`configs/demo_mpiigaze_resnet.yaml`](configs/demo_mpiigaze_resnet.yaml).
-
-    ```bash
-    python demo.py --config configs/demo_mpiigaze_resnet.yaml
-    ```
+The training time is the value when using Colab
 
 
 ## References
@@ -149,6 +113,6 @@ This demo program runs gaze estimation on the video from a webcam.
 * Zhang, Xucong, Yusuke Sugano, Mario Fritz, and Andreas Bulling. "Appearance-based Gaze Estimation in the Wild." Proc. of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2015. [arXiv:1504.02863](https://arxiv.org/abs/1504.02863), [Project Page](https://www.mpi-inf.mpg.de/departments/computer-vision-and-multimodal-computing/research/gaze-based-human-computer-interaction/appearance-based-gaze-estimation-in-the-wild/)
 * Zhang, Xucong, Yusuke Sugano, Mario Fritz, and Andreas Bulling. "It's Written All Over Your Face: Full-Face Appearance-Based Gaze Estimation." Proc. of the IEEE Conference on Computer Vision and Pattern Recognition Workshops(CVPRW), 2017. [arXiv:1611.08860](https://arxiv.org/abs/1611.08860), [Project Page](https://www.mpi-inf.mpg.de/departments/computer-vision-and-machine-learning/research/gaze-based-human-computer-interaction/its-written-all-over-your-face-full-face-appearance-based-gaze-estimation/)
 * Zhang, Xucong, Yusuke Sugano, Mario Fritz, and Andreas Bulling. "MPIIGaze: Real-World Dataset and Deep Appearance-Based Gaze Estimation." IEEE transactions on pattern analysis and machine intelligence 41 (2017). [arXiv:1711.09017](https://arxiv.org/abs/1711.09017)
-
+* https://github.com/kenkyusha/eyeGazeToScreen
 
 
