@@ -34,22 +34,27 @@ The Landmarks dlib file needs to be unzipped and moved to **pytorch_mpiigaze/dat
 ## Result:
 * Gaze Estimation Demo
     * Camera frame:
-        * ![Camera_frame](https://drive.google.com/uc?export=view&id=1-QaEuJ5-4Y-Damg_7WQ6I7wSRNQW2n_A)
+        * ![camera_frame](https://i.imgur.com/SBdDF2H.png)
     * Face tracker:
-        * ![tracker](https://drive.google.com/uc?export=view&id=1jR5m8uNtEl9STYuROyP0HoslqOFJY7Ab)
+        ![tracker](https://i.imgur.com/icJDIxw.png)
     * Points on screen:
         * ![Points](https://drive.google.com/uc?export=view&id=1K_nHApgI5bZ_F0hyXrDIhYPNRuzTqEMT)
     * Grid View:
-        * ![Grid](https://drive.google.com/uc?export=view&id=1C0ZbSzQCLVhR0VGN6vm7tfJOXH8NoNYc)
+        * ![Grid](https://i.imgur.com/PZ7PrjI.jpg)
+
 * Streamlit + Flask Demo:
     * Run Demo:
-        * ![Streamlit Demo](https://drive.google.com/uc?export=view&id=1G4PQFCfrHowDkccUXZknn9zIi_mVbaoa)
+        * ![Streamlit Demo](https://i.imgur.com/2jKXwfX.png)
+
     * Log View:
-        * ![Log](https://drive.google.com/uc?export=view&id=1Jl9_ZyM4csfirWCrm0L1S16aQc8OuJK8)
+        * ![Log](https://i.imgur.com/cXBnWMX.png)
+
     * Point View:
-        * ![Point](https://drive.google.com/uc?export=view&id=1UAusr51DAQjRXFwZDZzj-4a0hIUAjlSG)
+        * ![Point](https://i.imgur.com/lMAogNJ.png)
+
     * Viewer:
-        * ![Viewer](https://drive.google.com/uc?export=view&id=1Dq1Whmj5jShyPG9H_Am8X44XOCBRDFjh)
+        * ![Viewer](https://i.imgur.com/OAEKiTb.png)
+
 
 ## Requirements
 
@@ -94,9 +99,11 @@ configuration management.
 
 The training time is the value when using GTX 1080Ti.
 
-![AlexNet](https://drive.google.com/uc?export=view&id=1STwuxFjREAFDFpKC-bB0rl_RjsAHJ5TA)
+![AlexNet](https://i.imgur.com/HZ6t3Jm.png)
 
-![ResNet-14](https://drive.google.com/uc?export=view&id=1jEFjvm3mU-4H5QNb5ziWMzU-wbL2VXtj)
+
+![ResNet-14](https://i.imgur.com/obftO7O.png)
+
 
 ### My MPIIFaceGaze
 
